@@ -1,73 +1,169 @@
-# Welcome to your Lovable project
+# Connect Ed Space
 
-## Project info
+A modern edtech platform that connects students and educators with powerful features for learning, collaboration, and progress tracking.
 
-**URL**: https://lovable.dev/projects/d3b030e7-e0ab-48c4-a200-afc5f4cabb02
+## Features
 
-## How can I edit this code?
+- **Interactive Dashboard**: Track your learning progress, courses, and achievements at a glance
+- **Translation Tool**: Supports multiple languages to enhance global learning accessibility
+- **AI Notes Generator**: Automatically generate concise notes and study materials from lectures
+- **Analytics & Insights**: Gain data-driven insights into your learning patterns and performance
+- **Responsive Design**: Seamless experience across desktop, tablet, and mobile devices
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+### Frontend
+- React with TypeScript
+- Tailwind CSS for styling
+- shadcn UI components
+- @tanstack/react-query for data fetching
+- react-router-dom for navigation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d3b030e7-e0ab-48c4-a200-afc5f4cabb02) and start prompting.
+### Backend
+- Node.js with Express
+- TypeScript
+- CORS for cross-origin requests
 
-Changes made via Lovable will be committed automatically to this repo.
+## Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v16 or higher)
+- npm, yarn, or bun package manager
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 1. Clone the Repository
 
-Follow these steps:
+```bash
+# Clone the repository
+https://github.com/your-username/connect-ed-space.git
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Navigate to the project directory
+cd connect-ed-space
 ```
 
-**Edit a file directly in GitHub**
+### 2. Install Dependencies
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+#### Frontend Dependencies
 
-**Use GitHub Codespaces**
+```bash
+# Install frontend dependencies
+npm install
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+#### Backend Dependencies
 
-## What technologies are used for this project?
+```bash
+# Navigate to the backend directory
+cd backend
 
-This project is built with:
+# Install backend dependencies
+npm install
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Return to the project root directory
+cd ..
+```
 
-## How can I deploy this project?
+## Running the Application
 
-Simply open [Lovable](https://lovable.dev/projects/d3b030e7-e0ab-48c4-a200-afc5f4cabb02) and click on Share -> Publish.
+You'll need to run both the frontend and backend servers simultaneously.
 
-## Can I connect a custom domain to my Lovable project?
+### Option 1: Run Separately in Different Terminals
 
-Yes, you can!
+#### Terminal 1: Run the Backend
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+# Navigate to the backend directory
+cd backend
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+# Start the backend server in development mode
+npm run dev
+
+# The backend will run on http://localhost:3001
+```
+
+#### Terminal 2: Run the Frontend
+
+```bash
+# Make sure you're in the project root directory
+
+# Start the frontend development server
+npm run dev
+
+# The frontend will run on http://localhost:5173
+```
+
+### Option 2: Build and Run Production Versions
+
+#### Build the Backend
+
+```bash
+# Navigate to the backend directory
+cd backend
+
+# Build the backend TypeScript code
+npm run build
+
+# Start the production backend server
+npm start
+
+# The backend will run on http://localhost:3001
+```
+
+#### Build the Frontend
+
+```bash
+# Make sure you're in the project root directory
+
+# Build the frontend code
+npm run build
+
+# Preview the production build
+npm run preview
+
+# The frontend preview will run on http://localhost:4173
+```
+
+## API Endpoints
+
+The backend provides the following API endpoints:
+
+### Dashboard
+- `GET /api/dashboard/stats` - Get dashboard statistics
+- `GET /api/dashboard/courses` - Get course information
+- `GET /api/dashboard/live-classes` - Get live class details
+
+### Translation
+- `GET /api/translation/languages` - Get supported languages
+- `GET /api/translation` - Translate text (requires `text` and `targetLanguage` query params)
+
+### AI Notes
+- `GET /api/ai-notes/lecture` - Get lecture data
+- `GET /api/ai-notes` - Get AI-generated notes (supports `type` query param for filtering)
+
+### Analytics
+- `GET /api/analytics/performance` - Get overall performance data
+- `GET /api/analytics/course-progress` - Get course progress tracking
+- `GET /api/analytics/weekly-activity` - Get weekly activity data
+
+## Testing the API
+
+You can test the API endpoints using tools like curl, Postman, or directly in your browser.
+
+Example with curl:
+```bash
+# Test the API test endpoint
+curl http://localhost:3001/api/test
+
+# Get dashboard statistics
+curl http://localhost:3001/api/dashboard/stats
+```
+
+## Troubleshooting
+
+- If the backend fails to start, ensure you have the correct Node.js version and all dependencies are installed
+- If you encounter CORS errors, make sure the backend CORS configuration is correctly set up
+- For TypeScript compilation errors, run `npm run build` in the backend directory to see detailed error messages
+
+## License
+
+[MIT](LICENSE)
