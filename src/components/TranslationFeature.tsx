@@ -15,6 +15,9 @@ import { useState } from "react";
 
 const TranslationFeature = () => {
   const [activeLanguage, setActiveLanguage] = useState("spanish");
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [subtitlesEnabled, setSubtitlesEnabled] = useState(true);
   
   const languages = [
     { code: "spanish", name: "Spanish", flag: "🇪🇸", speakers: "2.1M" },
@@ -37,8 +40,30 @@ const TranslationFeature = () => {
     }
   };
 
+  const handleTranslate = async () => {
+    setIsTranslating(true);
+    // Simulate translation API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsTranslating(false);
+  };
+
+  const handleVoiceToggle = () => {
+    setVoiceEnabled(!voiceEnabled);
+    console.log("Voice mode:", !voiceEnabled ? "enabled" : "disabled");
+  };
+
+  const handleSubtitlesToggle = () => {
+    setSubtitlesEnabled(!subtitlesEnabled);
+    console.log("Subtitles:", !subtitlesEnabled ? "enabled" : "disabled");
+  };
+
+  const playAudio = (text: string, language: string) => {
+    console.log(`Playing audio: "${text}" in ${language}`);
+    // In a real app, this would use text-to-speech API
+  };
+
   return (
-    <section className="py-20 bg-background">
+    <section id="translation" className="py-20 bg-background">
       <div className="container mx-auto px-6">
         {/* Section header */}
         <div className="text-center mb-16 animate-fade-in">
@@ -60,13 +85,30 @@ const TranslationFeature = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Translation Demo */}
           <div className="space-y-6 animate-slide-in-right">
-            <Card className="p-6 gradient-card border-0 shadow-medium">
+            <Card className="p-6 gradient-card border-0 shadow-medium relative overflow-hidden">
+              {isTranslating && (
+                <div className="absolute inset-0 bg-primary/5 flex items-center justify-center z-10">
+                  <div className="flex items-center gap-2 text-primary">
+                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm font-medium">Translating...</span>
+                  </div>
+                </div>
+              )}
+              
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-success">Live Translation</span>
+                  <div className={`w-3 h-3 rounded-full animate-pulse ${isTranslating ? 'bg-warning' : 'bg-success'}`}></div>
+                  <span className={`text-sm font-medium ${isTranslating ? 'text-warning' : 'text-success'}`}>
+                    {isTranslating ? 'Translating...' : 'Live Translation'}
+                  </span>
                 </div>
-                <Button variant="outline" size="sm" className="hover-scale transition-smooth">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="hover-scale transition-smooth"
+                  onClick={handleTranslate}
+                  disabled={isTranslating}
+                >
                   <Settings className="w-4 h-4" />
                 </Button>
               </div>
@@ -76,7 +118,10 @@ const TranslationFeature = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🇺🇸</span>
                   <span className="text-sm font-medium text-foreground-muted">English (Original)</span>
-                  <Volume2 className="w-4 h-4 text-foreground-subtle ml-auto cursor-pointer hover:text-primary transition-smooth" />
+                  <Volume2 
+                    className="w-4 h-4 text-foreground-subtle ml-auto cursor-pointer hover:text-primary transition-smooth" 
+                    onClick={() => playAudio(translationDemo.original, 'English')}
+                  />
                 </div>
                 <p className="text-foreground leading-relaxed">
                   {translationDemo.original}
@@ -92,7 +137,10 @@ const TranslationFeature = () => {
                   <span className="text-sm font-medium text-primary">
                     {languages.find(l => l.code === activeLanguage)?.name} (Live Translation)
                   </span>
-                  <Volume2 className="w-4 h-4 text-primary ml-auto cursor-pointer hover:text-primary-glow transition-smooth" />
+                  <Volume2 
+                    className="w-4 h-4 text-primary ml-auto cursor-pointer hover:text-primary-glow transition-smooth" 
+                    onClick={() => playAudio(translationDemo.translations[activeLanguage as keyof typeof translationDemo.translations], activeLanguage)}
+                  />
                 </div>
                 <p className="text-foreground leading-relaxed">
                   {translationDemo.translations[activeLanguage as keyof typeof translationDemo.translations]}
@@ -101,13 +149,23 @@ const TranslationFeature = () => {
 
               {/* Translation controls */}
               <div className="flex items-center gap-3 mt-4">
-                <Button size="sm" variant="outline" className="hover-scale transition-smooth">
+                <Button 
+                  size="sm" 
+                  variant={voiceEnabled ? "default" : "outline"} 
+                  className="hover-scale transition-smooth"
+                  onClick={handleVoiceToggle}
+                >
                   <Mic className="w-4 h-4 mr-1" />
-                  Voice Mode
+                  {voiceEnabled ? 'Voice On' : 'Voice Mode'}
                 </Button>
-                <Button size="sm" variant="outline" className="hover-scale transition-smooth">
+                <Button 
+                  size="sm" 
+                  variant={subtitlesEnabled ? "default" : "outline"} 
+                  className="hover-scale transition-smooth"
+                  onClick={handleSubtitlesToggle}
+                >
                   <Subtitles className="w-4 h-4 mr-1" />
-                  Subtitles
+                  {subtitlesEnabled ? 'Subtitles On' : 'Subtitles'}
                 </Button>
               </div>
             </Card>
@@ -115,17 +173,22 @@ const TranslationFeature = () => {
             {/* Features */}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: Languages, title: "100+ Languages", desc: "Comprehensive coverage" },
-                { icon: Globe, title: "Real-time", desc: "Instant translation" },
-                { icon: Volume2, title: "Voice Support", desc: "Audio translation" },
-                { icon: Users, title: "Group Chat", desc: "Multilingual discussions" }
+                { icon: Languages, title: "100+ Languages", desc: "Comprehensive coverage", stat: "100+" },
+                { icon: Globe, title: "Real-time", desc: "Instant translation", stat: "<1s" },
+                { icon: Volume2, title: "Voice Support", desc: "Audio translation", stat: "HD" },
+                { icon: Users, title: "Group Chat", desc: "Multilingual discussions", stat: "Live" }
               ].map((feature, index) => (
                 <Card 
                   key={feature.title}
-                  className="p-4 gradient-card border-0 shadow-soft hover:shadow-medium hover-lift transition-smooth"
+                  className="p-4 gradient-card border-0 shadow-soft hover:shadow-medium hover-lift transition-smooth group cursor-pointer"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <feature.icon className="w-6 h-6 text-primary mb-2" />
+                  <div className="flex items-center justify-between mb-2">
+                    <feature.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-smooth" />
+                    <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+                      {feature.stat}
+                    </Badge>
+                  </div>
                   <h4 className="font-medium text-foreground text-sm mb-1">{feature.title}</h4>
                   <p className="text-xs text-foreground-muted">{feature.desc}</p>
                 </Card>
@@ -146,14 +209,14 @@ const TranslationFeature = () => {
                   <button
                     key={language.code}
                     onClick={() => setActiveLanguage(language.code)}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 text-left hover-lift ${
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 text-left hover-lift group ${
                       activeLanguage === language.code
                         ? "border-primary bg-primary/10 shadow-medium"
                         : "border-border hover:border-primary/50 bg-background-subtle"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">{language.flag}</span>
+                      <span className="text-xl group-hover:scale-110 transition-smooth">{language.flag}</span>
                       <span className="font-medium text-foreground text-sm">{language.name}</span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -186,7 +249,7 @@ const TranslationFeature = () => {
               </div>
               
               <Button className="w-full mt-4 gradient-primary text-primary-foreground hover-scale transition-smooth">
-                Try Live Translation
+                {isTranslating ? 'Translating...' : 'Try Live Translation'}
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Card>
